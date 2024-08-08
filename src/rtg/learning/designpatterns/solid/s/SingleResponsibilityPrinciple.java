@@ -1,5 +1,6 @@
 package rtg.learning.designpatterns.solid.s;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.URL;
@@ -23,13 +24,26 @@ class Journal{
 		return String.join(System.lineSeparator(), entries);
 	}
 	
-	public void save(String filename) throws FileNotFoundException{
-		try(PrintStream out=new PrintStream(filename)){
-			out.println(toString());
+//	public void save(String filename) throws FileNotFoundException{
+//		try(PrintStream out=new PrintStream(filename)){
+//			out.println(toString());
+//		}
+//	}
+//	public void load(String filename) {	}
+//	public void load(URL url) {}
+}
+
+class Persistence{
+	public void saveToFile(Journal journal, String filename, boolean overwrite) throws FileNotFoundException {
+		if(overwrite || new File(filename).exists()) {
+			try(PrintStream out=new PrintStream(filename)){
+				out.println(journal.toString());
+			}
 		}
 	}
-	public void load(String filename) {	}
-	public void load(URL url) {}
+	
+//	public Journal load(String filename) {}
+//	public Journal load(URL url) {}
 }
 
 public class SingleResponsibilityPrinciple {
@@ -38,5 +52,12 @@ public class SingleResponsibilityPrinciple {
 		j.addEntry("Learn Design Pattern");
 		j.addEntry("Learning Single Responsibility Principle");
 		System.out.println(j);
+		
+		Persistence p = new Persistence();
+		String filename="c:\\temp\\journal.txt";
+		p.saveToFile(j, filename, true);
+		
+		Runtime.getRuntime().exec("notepad.exe " + filename);
+//		Runtime.getRuntime().
 	}
 }
