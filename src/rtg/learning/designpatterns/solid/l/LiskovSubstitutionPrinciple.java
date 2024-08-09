@@ -37,6 +37,19 @@ class Rectangle {
 		return "Rectangle [width=" + width + ", height=" + height + "]";
 	}
 	
+	public boolean isSquare() {
+		return width==height;
+	}
+}
+
+class RectangleFactory{
+	public static Rectangle newRectangle(int width, int height) {
+		return new Rectangle(width, height);
+	}
+	
+	public static Rectangle newSquare(int size) {
+		return new Rectangle(size, size);
+	}
 }
 
 class Square extends Rectangle{
@@ -77,5 +90,9 @@ public class LiskovSubstitutionPrinciple {
 		Rectangle sq=new Square();
 		sq.setWidth(5);
 		useIt(sq);
+		
+		RectangleFactory rf=new RectangleFactory();
+		useIt(rf.newSquare(5));
+		
 	}
 }
