@@ -2,6 +2,7 @@ package rtg.learning.designpatterns.solid.d;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 //e.g family tree kind of application
 enum Relationship {
@@ -52,7 +53,11 @@ class Triplet {
 	}
 }
 
-class Relationships { // low level module
+interface RelationshipBrowser{
+	List<Person> findAllChildrenOf(String name);
+}
+
+class Relationships implements RelationshipBrowser{ // low level module
 	private List<Triplet> relations = new ArrayList<>();
 
 	public List<Triplet> getRelations() {
@@ -63,14 +68,28 @@ class Relationships { // low level module
 		relations.add(new Triplet(parent, Relationship.PARENT, child));
 		relations.add(new Triplet(child, Relationship.CHILD, parent));
 	}
+
+	@Override
+	public List<Person> findAllChildrenOf(String name) {
+		return relations.stream().filter(x -> x.getPerson1().getName()==name && x.getRelationship() == Relationship.PARENT)
+						.map(Triplet::getPerson2)
+						.collect(Collectors.toList());
+	}
 }
 
 class Research { // high-level module
-	public Research(Relationships relationships) {
-		List<Triplet> relations = relationships.getRelations();
-
-		relations.stream().filter(x -> x.getPerson1().getName().equals("John") && x.getRelationship() == Relationship.PARENT)
-			.forEach(ch -> System.out.println("John has a child called "+ch.getPerson2().getName()));
+//	public Research(Relationships relationships) {
+//		List<Triplet> relations = relationships.getRelations();
+//
+//		relations.stream().filter(x -> x.getPerson1().getName().equals("John") && x.getRelationship() == Relationship.PARENT)
+//			.forEach(ch -> System.out.println("John has a child called "+ch.getPerson2().getName()));
+//	}
+	
+	public Research(RelationshipBrowser browser) {
+		List<Person> children = browser.findAllChildrenOf("John");
+		for(Person child:children) {
+			System.out.println("John has a child called "+child.getName());
+		}
 	}
 }
 
