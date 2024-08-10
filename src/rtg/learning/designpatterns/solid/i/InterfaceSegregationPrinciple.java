@@ -49,16 +49,23 @@ interface MultiFunctionDevice extends Printer, Scanner{ }
 
 class MultiFunctionMachine implements MultiFunctionDevice{
 
+	private Printer printer;
+	private Scanner scanner;
+	
+	public MultiFunctionMachine(Printer printer, Scanner scanner) {
+		super();
+		this.printer = printer;
+		this.scanner = scanner;
+	}
+
 	@Override
 	public void print(Document d) {
-		// TODO Auto-generated method stub
-		
+		printer.print(d);
 	}
 
 	@Override
 	public void scan(Document d) {
-		// TODO Auto-generated method stub
-		
+		scanner.scan(d);
 	}
 	
 }
